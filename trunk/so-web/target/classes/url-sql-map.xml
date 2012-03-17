@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Navigation">
+	<resultMap class="com.java321.so.module.UrlVO" id="url">
+		<result property="id" column="id" />
+		<result property="url" column="url" />
+		<result property="tree" column="tree" />
+		<result property="father" column="father" />
+		<result property="root" column="root" />
+	</resultMap>
+	
+	<select id="UrlDAO.queryAllUrls">
+		SELECT * FROM url
+	</select>
+	
+	<select id="UrlDAO.queryUrlById">
+		SELECT * FROM url WHERE id = #id#
+	</select>
+	
+	<select id="UrlDAO.queryUrlsByFatherId">
+		SELECT * FROM url WHERE father = #id#
+	</select>
+	
+	<insert id="UrlDAO.insertUrl" parameterClass="url">
+		INSERT INTO url (id,url,tree,father,root) VALUES(#id#,#url#,#tree#,#father#,#root#)
+	</insert>
+	
+	<select id="UrlDAO.querySingleUrls">
+		SELECT url FROM url
+	</select>
+</sqlMap>
