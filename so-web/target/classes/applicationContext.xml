@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd"
+	default-autowire="byName" default-lazy-init="true">
+	
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/dev-filter.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 此处配置jndi，由于是demo，所以暂时使用数据连接池 
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singlenton">
+		<property name="jndiName" value="/jdbc/data"/>
+		<property name="resourceRef" value="true"/>
+	</bean>
+	-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/so"></property>
+		<property name="username" value="root"/>
+		<property name="password" value="root"/>
+	</bean>
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:/sql-map-config.xml"></property>
+	</bean>
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="userDAO" class="com.java321.so.db.dao.impl.UrlDAOImpl"/>
+	<bean id="urlService" class="com.java321.so.service.UrlDBService"/>
+	<bean id="spider" class="com.java321.so.spider.Spider">
+	</bean>
+	<bean id="execSpider" class="com.java321.so.spider.concurrent.ExecSpider"></bean>
+	<bean id="urlsProducer" class="com.java321.so.spider.concurrent.url.UrlsProducer"/>
+	<bean id="urlsConsumer" class="com.java321.so.spider.concurrent.url.UrlsConsumer"/>
+	<bean id="crawl" class="com.java321.so.spider.crawl.Crawl"/>
+	
+	
+
+</beans>
